@@ -7,6 +7,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for item_reports table.
+ *
+ * Valid status values (enum report_status):
+ * - 'Unclaimed' – item is still available
+ * - 'Claimed' – item has been claimed
+ *
+ * All methods handle enum casting automatically using CAST(? AS report_status).
+ */
+
 public class ItemReportDAO {
 
     // INSERT

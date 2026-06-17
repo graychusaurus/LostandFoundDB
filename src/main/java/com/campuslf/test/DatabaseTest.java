@@ -4,7 +4,6 @@ import com.campuslf.dao.*;
 import com.campuslf.models.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class DatabaseTest {
@@ -25,18 +24,15 @@ public class DatabaseTest {
         System.out.println("Fetched admin: " + (fetched != null ? fetched.getUsername() : "null"));
         int adminId = (fetched != null) ? fetched.getAdminId() : 1;
 
-        // 2. Ensure category with id=1 exists (run SQL in Supabase first)
-        // For now, let's fetch category ID or assume 1 exists.
-        // You can also query category table to get first category ID.
-        // Let's just try to get category ID 1; if fails, we'll need to insert.
-        // To avoid foreign key error, we'll use a helper to get or create category.
-        // But for simplicity, assume you inserted categories with IDs 1-5.
+        // 2. Ensure category exists – modify this if you have a different category ID
+        // For now, using category_id = 1 (Electronics)
+        // If you get foreign key errors, check your category table in Supabase
 
         // 3. Test ItemReport insertion
         ItemReportDAO itemDAO = new ItemReportDAO();
         ItemReport item = new ItemReport();
         item.setAdminId(adminId);
-        item.setCategoryId(1); // Ensure category 1 exists
+        item.setCategoryId(1); // Ensure category 1 exists (e.g., 'Electronics')
         item.setItemName("Lost Laptop");
         item.setDescription("Dell XPS 13, silver color");
         item.setLocationFound("Library 2nd floor");
@@ -45,7 +41,7 @@ public class DatabaseTest {
         item.setFinderStudentId("2024-12345");
         item.setFinderContactNum("09123456789");
         item.setImageUrl("https://example.com/laptop.jpg");
-        item.setReportStatus("Pending");
+        item.setReportStatus("Unclaimed"); // CHANGED: was "Pending"
 
         boolean itemAdded = itemDAO.addItemReport(item);
         System.out.println("Item report added: " + itemAdded);
@@ -54,7 +50,7 @@ public class DatabaseTest {
         }
 
         // 4. Retrieve and display unclaimed items
-        List<ItemReport> unclaimed = itemDAO.getAllItemReports("Pending");
+        List<ItemReport> unclaimed = itemDAO.getAllItemReports("Unclaimed"); // CHANGED: was "Pending"
         System.out.println("Unclaimed items count: " + unclaimed.size());
         for (ItemReport i : unclaimed) {
             System.out.println(i.getItemName() + " - " + i.getReportStatus());
@@ -70,7 +66,7 @@ public class DatabaseTest {
             claim.setClaimantStudentId("2023-67890");
             claim.setClaimantContact("09987654321");
             claim.setCourseSection("BSIT 3-2");
-            claim.setClaimStatus("Pending");
+            claim.setClaimStatus("Pending"); // This stays "Pending" – claim table still uses this
             claim.setDateClaimed(LocalDate.now());
 
             boolean claimAdded = claimDAO.addClaim(claim);

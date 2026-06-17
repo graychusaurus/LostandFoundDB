@@ -72,6 +72,7 @@ public class ItemReport {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    // Valid statuses: 'Unclaimed', 'Claimed'
     public String getReportStatus() { return reportStatus; }
     public void setReportStatus(String reportStatus) { this.reportStatus = reportStatus; }
 }
