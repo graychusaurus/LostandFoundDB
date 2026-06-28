@@ -1,40 +1,31 @@
 package com.campuslf.models;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Claim {
     private int claimId;
-    private int reportId;
+    private int lostReportId;
+    private int foundReportId;
     private int adminId;
     private String claimantName;
-    private String claimantStudentId;
-    private String claimantContact;
-    private String courseSection;
-    private String claimStatus;   // 'Pending', 'Approved', 'Rejected'
-    private LocalDate dateClaimed;
+    private String claimantId;           // ✅ Renamed from claimantSchoolId
+    private String claimantContactNumber;
+    private String claimantSignature;
+    private String verificationNotes;
+    private String claimStatus;
+    private LocalDateTime dateClaimed;
 
     public Claim() {}
-
-    public Claim(int claimId, int reportId, int adminId, String claimantName,
-                 String claimantStudentId, String claimantContact, String courseSection,
-                 String claimStatus, LocalDate dateClaimed) {
-        this.claimId = claimId;
-        this.reportId = reportId;
-        this.adminId = adminId;
-        this.claimantName = claimantName;
-        this.claimantStudentId = claimantStudentId;
-        this.claimantContact = claimantContact;
-        this.courseSection = courseSection;
-        this.claimStatus = claimStatus;
-        this.dateClaimed = dateClaimed;
-    }
 
     // Getters and Setters
     public int getClaimId() { return claimId; }
     public void setClaimId(int claimId) { this.claimId = claimId; }
 
-    public int getReportId() { return reportId; }
-    public void setReportId(int reportId) { this.reportId = reportId; }
+    public int getLostReportId() { return lostReportId; }
+    public void setLostReportId(int lostReportId) { this.lostReportId = lostReportId; }
+
+    public int getFoundReportId() { return foundReportId; }
+    public void setFoundReportId(int foundReportId) { this.foundReportId = foundReportId; }
 
     public int getAdminId() { return adminId; }
     public void setAdminId(int adminId) { this.adminId = adminId; }
@@ -42,18 +33,21 @@ public class Claim {
     public String getClaimantName() { return claimantName; }
     public void setClaimantName(String claimantName) { this.claimantName = claimantName; }
 
-    public String getClaimantStudentId() { return claimantStudentId; }
-    public void setClaimantStudentId(String claimantStudentId) { this.claimantStudentId = claimantStudentId; }
+    public String getClaimantId() { return claimantId; }                    // ✅ Renamed
+    public void setClaimantId(String claimantId) { this.claimantId = claimantId; }  // ✅ Renamed
 
-    public String getClaimantContact() { return claimantContact; }
-    public void setClaimantContact(String claimantContact) { this.claimantContact = claimantContact; }
+    public String getClaimantContactNumber() { return claimantContactNumber; }
+    public void setClaimantContactNumber(String claimantContactNumber) { this.claimantContactNumber = claimantContactNumber; }
 
-    public String getCourseSection() { return courseSection; }
-    public void setCourseSection(String courseSection) { this.courseSection = courseSection; }
+    public String getClaimantSignature() { return claimantSignature; }
+    public void setClaimantSignature(String claimantSignature) { this.claimantSignature = claimantSignature; }
+
+    public String getVerificationNotes() { return verificationNotes; }
+    public void setVerificationNotes(String verificationNotes) { this.verificationNotes = verificationNotes; }
 
     public String getClaimStatus() { return claimStatus; }
     public void setClaimStatus(String claimStatus) { this.claimStatus = claimStatus; }
 
-    public LocalDate getDateClaimed() { return dateClaimed; }
-    public void setDateClaimed(LocalDate dateClaimed) { this.dateClaimed = dateClaimed; }
+    public LocalDateTime getDateClaimed() { return dateClaimed; }
+    public void setDateClaimed(LocalDateTime dateClaimed) { this.dateClaimed = dateClaimed; }
 }

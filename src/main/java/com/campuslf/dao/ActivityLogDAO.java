@@ -36,13 +36,8 @@ public class ActivityLogDAO {
                 log.setAdminId(rs.getInt("admin_id"));
                 log.setActivity(rs.getString("activity"));
 
-                // Null-safe timestamp conversion
                 Timestamp ts = rs.getTimestamp("timestamp");
-                if (ts != null) {
-                    log.setTimestamp(ts.toLocalDateTime());
-                } else {
-                    log.setTimestamp(null);
-                }
+                log.setTimestamp(ts != null ? ts.toLocalDateTime() : null);
 
                 logs.add(log);
             }
