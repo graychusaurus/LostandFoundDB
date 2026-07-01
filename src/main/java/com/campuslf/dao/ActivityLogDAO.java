@@ -4,18 +4,21 @@ import com.campuslf.database.DatabaseConnection;
 import com.campuslf.models.ActivityLog;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ActivityLogDAO {
 
     public boolean addLog(int adminId, String activity) {
-        String sql = "INSERT INTO activity_logs (admin_id, activity) VALUES (?, ?)";
+        String sql = "INSERT INTO activity_logs (admin_id, activity, timestamp) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, adminId);
             pstmt.setString(2, activity);
+            pstmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
+
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -25,7 +28,7 @@ public class ActivityLogDAO {
 
     public List<ActivityLog> getAllLogs() {
         List<ActivityLog> logs = new ArrayList<>();
-        String sql = "SELECT * FROM activity_logs ORDER BY timestamp DESC";
+        String sql = "SELECT * FROM activity_logs ORDER BY timestamp DESC";  // ✅ Fixed table name
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
