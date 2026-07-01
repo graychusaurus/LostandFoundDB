@@ -1,117 +1,161 @@
 # Campus Lost and Found Database Layer
 
-JDBC integration with Supabase (PostgreSQL) for the Campus Lost and Found Reporting System.  
-Provides a complete data access layer using DAO pattern for the `item_reports`, `claim`, `admin`, `activity_logs`, and `category` tables.
+JDBC integration with **SQLite** for the Campus Lost and Found Reporting System.  
+Provides a complete data access layer using DAO pattern for `lost_item_report`, `found_item_report`, `claim`, `admin`, `category`, and `activity_logs` tables.
 
-## Technologies
+---
+
+## 📦 Technologies
 - Java 17+
 - Maven
-- PostgreSQL (Supabase)
+- **SQLite** (local database)
 - JDBC
 
-## Setup for Backend Developer
+---
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/grayuschaurus/LostandFoundDB.git
-   cd LostandFoundDB
+## 🔧 Setup for Developers
 
-2. Create config.properties file
-Create the folder src/main/resources (if missing).
-Inside it, create a file named config.properties with the following content (replace YOUR_DB_PASSWORD with the password provided by the database team):
+1. Clone the Repository
 
-properties:
-db.url=jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres?sslmode=require
-db.user=postgres.ddrukchfncfxmsglimjx
-db.password=YOUR_DB_PASSWORD
-Important: This file is ignored by Git (see .gitignore). Never commit it.
+```bash
+git clone https://github.com/grayuschaurus/LostandFoundDB.git
+cd LostandFoundDB
 
-3. Build the project
-Using Maven:
+2. Open in IntelliJ
+* Open IntelliJ IDEA
+* Select Open and choose the project folder
+* Wait for Maven to download dependencies
 
-bash
-mvn clean compile
-Or open in IntelliJ as a Maven project (dependencies will auto-download).
-
-4. Run the test
-Execute DatabaseTest.java (inside com.campuslf.test package) to verify the connection and basic CRUD operations.
+3. Run the Test
+* Navigate to src/main/java/com/campuslf/test/DatabaseTest.java
+* Right-click → Run 'DatabaseTest.main()'
 
 Expected output:
+=== Testing Database Layer ===
+
+--- 1. Testing Admin ---
 Admin already exists, skipping insert.
-Item report added: true
+Fetched admin: test_admin
+
+--- 2. Testing Category ---
+Categories found: 10
+
+--- 3. Testing Lost Item Report ---
+Lost item added: true
+
+--- 4. Testing Found Item Report ---
+Found item added: true
+
+--- 5. Testing Claim ---
 Claim added: true
+
+--- 6. Testing Activity Log ---
 Activity log added: true
 
-Project Structure:
+--- 7. Testing Update Operations ---
+Lost item status updated to 'Claimed': true
+Found item status updated to 'Claimed': true
+Claim status updated to 'Approved': true
+
+=== ✅ All tests completed successfully! ===
+
+No setup required! The database file LostAndFound.db is included in the repository.
+
+📂 Project Structure
 src/main/java/com/campuslf/
 ├── database/
-│   └── DatabaseConnection.java      # Loads credentials, provides connection
+│   └── DatabaseConnection.java      # SQLite connection
 ├── models/
 │   ├── Admin.java
 │   ├── Category.java
-│   ├── ItemReport.java
+│   ├── LostItemReport.java
+│   ├── FoundItemReport.java
 │   ├── Claim.java
 │   └── ActivityLog.java
 ├── dao/
 │   ├── AdminDAO.java
-│   ├── ItemReportDAO.java
+│   ├── CategoryDAO.java
+│   ├── LostItemReportDAO.java
+│   ├── FoundItemReportDAO.java
 │   ├── ClaimDAO.java
 │   └── ActivityLogDAO.java
 └── test/
-    └── DatabaseTest.java            # Example usage
+    ├── TestConnection.java
+    └── DatabaseTest.java
 
-DAO Methods Overview
-* ItemReportDAO -	addItemReport() 
-              - getAllItemReports(statusFilter) 
-              - getItemReportById() 
-              - updateReportStatus() 
-              - deleteItemReport()
-* ClaimDAO	- addClaim()
-          - getClaimsByReportId()
-          - updateClaimStatus()
-* AdminDAO	- getAdminByUsername()
-          - addAdmin()
-* ActivityLogDAO	- addLog()
-                - getAllLogs()
+📝 DAO Methods Overview
+* LostItemReportDAO
+-addLostItemReport()
+-getAllLostItemReports()
+-updateLostItemStatus()
+
+* FoundItemReportDAO
+-addFoundItemReport()
+-getAllFoundItemReports()
+-updateFoundItemStatus()
+
+* ClaimDAO
+-addClaim()
+-getAllClaims()
+-updateClaimStatus()
+-updateVerificationNotes()
+
+* AdminDAO
+-getAdminByUsername()
+-addAdmin()
+
+* CategoryDAO
+-getAllCategories()
+-getCategoryById()
+
+* ActivityLogDAO
+-addLog()
+-getAllLogs()
 
 
 Usage Example (JavaFX Controller)
-// Get all unclaimed items
-ItemReportDAO itemDAO = new ItemReportDAO();
-List<ItemReport> unclaimedItems = itemDAO.getAllItemReports("Pending");
+// Get all pending lost items
+LostItemReportDAO lostDAO = new LostItemReportDAO();
+List<LostItemReport> pendingLost = lostDAO.getAllLostItemReports("Pending");
 
 // Add a new found item
-ItemReport newItem = new ItemReport();
-newItem.setAdminId(1);
-newItem.setCategoryId(1);
-newItem.setItemName("Black Wallet");
-newItem.setDescription("Leather wallet, contains student ID");
-newItem.setLocationFound("Canteen table");
-newItem.setDateReported(LocalDate.now());
-newItem.setDatePosted(LocalDate.now());
-newItem.setFinderStudentId("2024-12345");
-newItem.setFinderContactNum("09123456789");
-newItem.setImageUrl("https://example.com/wallet.jpg");
-newItem.setReportStatus("Pending");
+FoundItemReport foundItem = new FoundItemReport();
+foundItem.setAdminId(1);
+foundItem.setCategoryId(1);
+foundItem.setItemName("Black Wallet");
+foundItem.setDescription("Leather wallet with PUP ID");
+foundItem.setFinderName("Juan Dela Cruz");
+foundItem.setFinderId("2024-12345");
+foundItem.setFinderContactNumber("09123456789");
+foundItem.setLocationFound("Canteen");
+foundItem.setDateFound(LocalDate.now());
+foundItem.setDateReported(LocalDateTime.now());
+foundItem.setStatus("Pending");
 
-boolean success = itemDAO.addItemReport(newItem);
+FoundItemReportDAO foundDAO = new FoundItemReportDAO();
+boolean success = foundDAO.addFoundItemReport(foundItem);
 
+Database Schema
+admin	- Admin accounts (login)
+category	- Item categories (Electronics, Bag/Wallet, etc.)
+lost_item_report	- Reports of lost items
+found_item_report	- Reports of found items
+claim	- Claim verification and processing
+activity_logs	- Audit trail of admin actions
 
+Key Relationships
+* admin (1) → lost_item_report (many)
+* admin (1) → found_item_report (many)
+* admin (1) → claim (many)
+* category (1) → lost_item_report (many)
+* category (1) → found_item_report (many)
+* lost_item_report (1) → claim (many)
+* found_item_report (1) → claim (many)
 
-Important Notes on Enums
-The Supabase schema uses custom enum types for status fields:
-* item_reports.status → type report_status (values: 'Pending', 'Claimed', 'Archived')
-* claim.claim_status → type claim_status_enum (values: 'Pending', 'Approved', 'Rejected')
+🔧 Troubleshooting
+* No suitable driver found	- Make sure SQLite JDBC dependency is in pom.xml and Maven is refreshed
+* SQL error or missing database (no such table)	- The database file LostAndFound.db must be in the project root folder
+* SQL error or missing database (no such column)	- Check column names against the schema above
+* Java warnings about restricted methods	- Safe to ignore – it's a Java 25 warning
 
-The DAO methods automatically handle the required casting using CAST(? AS report_status).
-You only need to pass plain Java strings like "Pending". Do not try to pass the enum type directly.
-
-
-
- Troubleshooting
- * Connection refused - Check that config.properties has correct URL and user. Ensure you're using the session pooler port (5432).
- * FATAL: password authentication failed - The password in config.properties is incorrect. Contact the database team for the current password.
- * relation "category" does not exist - The database schema is missing. Run the CREATE TABLE script (available from database team).
- * column "status" is of type report_status but expression is of type character varying - You forgot to use the DAO method – it already includes CAST. If you write raw SQL, add CAST(? AS report_status).
-
-
+Ready for integration with JavaFX frontend. Use the DAO methods directly – no manual JDBC handling needed.
